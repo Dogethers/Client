@@ -10,8 +10,10 @@ const Register = ({navigation}) => {
     const [data, setData] = React.useState({
         username: '',
         password: '',
+        email:'',
         confirm_password: '',
         check_textInputChange: false,
+        check_textInputChangeEmail: false,
         secureTextEntry: true,
         confirm_secureTextEntry: true,
     })
@@ -32,6 +34,24 @@ const Register = ({navigation}) => {
         }
     }
 
+    const textInputChangeEmail = (val) => {
+        const mailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        
+        if(val.match(mailFormat)) {
+            setData({
+                ...data,
+                email: val,
+                check_textInputChangeEmail: true
+            })
+        } else {
+            setData({
+                ...data,
+                email: val,
+                check_textInputChangeEmail: false
+            })
+        }
+    }
+
     const handlePasswordChange = (val) => {
         setData({
             ...data,
@@ -48,9 +68,9 @@ const Register = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle='light-content' />
+            <StatusBar backgroundColor='#1F3C88' barStyle='light-content' />
             <View style={styles.header}>
-                <Text style={styles.text_header}>Register</Text>
+                <Text style={styles.text_header}>Join the fun!</Text>
             </View>
             <Animatable.View 
                 animation="fadeInUpBig"
@@ -71,6 +91,36 @@ const Register = ({navigation}) => {
                             onChangeText={(val) => textInputChange(val)}
                         />
                         {data.check_textInputChange ? 
+                        <Animatable.View 
+                            animation="bounceIn"
+                        >
+                            <Feather 
+                                name="check-circle"
+                                color="green"
+                                size={20}
+                            />
+
+                        </Animatable.View>
+                        : null}
+                    </View>
+                    
+                    <Text style={[styles.text_footer,{
+                        marginTop: 35
+                    }]}>Email</Text>
+                    <View style={styles.action}>
+                        <Feather 
+                            name="mail"
+                            color="#05375a"
+                            size={20}
+                        />
+                        <TextInput 
+                            placeholder="Your Email"
+                            style={styles.textInput}
+                            autoCapitalize="none"
+                            autoCompleteType="email"
+                            onChangeText={(val) => textInputChangeEmail(val)}
+                        />
+                        {data.check_textInputChangeEmail ? 
                         <Animatable.View 
                             animation="bounceIn"
                         >
@@ -118,33 +168,34 @@ const Register = ({navigation}) => {
                             }
                         </TouchableOpacity>
                     </View>
+                    
                     <View style={styles.button}>
                             <TouchableOpacity 
                                 style={styles.signIn}
                                 onPress={() => {}}
                             >
                                 <LinearGradient 
-                                  colors={['#08d4c4', '#01ab9d']}
+                                  colors={["#EE6F57", "#ed5a3e"]}
                                   style={styles.signIn}  
                                 >
                                     <Text style={[styles.textSign,{
                                         color: '#fff'
                                     }]}>
-                                        Register
+                                       Sign Up
                                     </Text>
                                 </LinearGradient>
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 onPress={() => navigation.goBack()}
                                 style={[styles.signIn, {
-                                    borderColor: '#009387',
+                                    borderColor: '#1F3C88',
                                     borderWidth: 1,
                                     marginTop: 15
                                 }]}
                             >
                                 <Text style={[styles.textSign, {
-                                    color: '#009387'
-                                }]}>Login</Text>
+                                    color: '#1F3C88'
+                                }]}>Sign In</Text>
                             </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -158,7 +209,7 @@ export default Register
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#009387'
+        backgroundColor: '#1F3C88'
     },
     header: {
         flex: 1,

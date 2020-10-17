@@ -81,9 +81,9 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#009387" barStyle="light-content" />
+      <StatusBar backgroundColor="#1F3C88" barStyle="light-content" />
       <View style={styles.header}>
-        <Text style={styles.text_header}>Welcome! </Text>
+        <Text style={styles.text_header}>Welcome back! </Text>
       </View>
       <Animatable.View animation="fadeInUpBig" style={styles.footer}>
         <Text style={styles.text_footer}>Username</Text>
@@ -157,11 +157,11 @@ const Login = ({ navigation }) => {
                 style={styles.signIn}
             >
                 <LinearGradient 
-                    colors={['#08d4c4', '#01ab9d']}
+                    colors={["#EE6F57", "#ed5a3e"]}
                     style={styles.signIn}
                 >
                     <Text style={[styles.textSign,{color: '#fff'}]}>
-                        Login
+                        Sign In
                     </Text>
                 </LinearGradient>
             </TouchableOpacity>
@@ -169,14 +169,14 @@ const Login = ({ navigation }) => {
             <TouchableOpacity
                 onPress={() => navigation.navigate('Register')}
                 style={[styles.signIn,{
-                    borderColor: '#009387',
+                    borderColor: '#1F3C88',
                     borderWidth: 1,
                     marginTop: 15
                 }]}
             >
                 
-                    <Text style={[styles.textSign,{color: '#009387'}]}>
-                        Register
+                    <Text style={[styles.textSign,{color: '#1F3C88'}]}>
+                        Sign Up
                     </Text>
                 
             </TouchableOpacity>
@@ -192,7 +192,7 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#009387",
+    backgroundColor: "#1F3C88",
   },
   header: {
     flex: 1,
