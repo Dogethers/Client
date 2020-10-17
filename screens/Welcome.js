@@ -16,7 +16,7 @@ import GambarSvg from "../assets/home.svg";
 const Welcome = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#009387" barStyle="light-content" />
+      <StatusBar backgroundColor="#E5E5E5" barStyle="dark-content" />
       <View style={styles.header}>
         {/* <Image 
                  source={require('../assets/home.svg')}
@@ -26,12 +26,13 @@ const Welcome = ({ navigation }) => {
         <GambarSvg width={228} height={176} />
       </View>
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
+      <Text style={styles.titleMain}>DOGETHER!</Text>
         <Text style={styles.title}>Stay games with everyone</Text>
         <Text style={styles.text}>Sign in with account</Text>
         <View style={styles.button}>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <LinearGradient
-              colors={["#08d4c4", "#01ab9d"]}
+              colors={["#EE6F57", "#ed5a3e"]}
               style={styles.login}
             >
               <Text style={styles.textLogin}>Get Started</Text>
@@ -52,13 +53,13 @@ export default Welcome;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#009387",
+    backgroundColor: "#E5E5E5",
   },
   header: {
     flex: 2,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#009387",
+    backgroundColor: "#E5E5E5",
   },
   footer: {
     flex: 1,
@@ -72,9 +73,14 @@ const styles = StyleSheet.create({
   //     width: height_logo,
   //     height: height_logo
   // },
+  titleMain: {
+    color: '#EE6F57',
+    fontSize: 30,
+    fontWeight:'bold'
+},
   title: {
       color: '#05375a',
-      fontSize: 30,
+      fontSize: 22,
       fontWeight:'bold'
   },
   text: {
