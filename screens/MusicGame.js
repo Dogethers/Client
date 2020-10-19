@@ -3,13 +3,38 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import SpeechToTextButton from '../components/STTButton';
 
+import { Audio } from 'expo-av';
+
 const MusicGame = ({ navigation }) => {
-	const [playerAnswer, setPlayerAnswer] = useState('Carry Me Away');
+	const [playerAnswer, setPlayerAnswer] = useState('hasil transcript');
+
+	const play = async () => {
+        console.log('masuk');
+        try {
+            const { sound: soundObject, status } = await Audio.Sound.createAsync(
+                {
+                    uri:
+                        'https://dogether-music.s3-ap-southeast-1.amazonaws.com/John+Mayer+-+Carry+Me+Away+(Official+Lyric+Video)+(320+kbps).mp3',
+                },
+                { shouldPlay: true, isLooping: false }
+            );
+            // Your sound is playing!
+            console.log('play');
+        } catch (error) {
+            console.log(error);
+            // An error occurred!
+        }
+    };
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.songBox}>
 				<Text style={styles.songText}>Playing the song...</Text>
+				<TouchableOpacity
+						onPress={() => play()}
+					>
+						<Text>Tes Play Song</Text>
+					</TouchableOpacity>
 			</View>
 			<View style={styles.answerBox}>
 				<Text style={styles.answerText}>{playerAnswer}</Text>
@@ -24,7 +49,7 @@ const MusicGame = ({ navigation }) => {
 					<TouchableOpacity
 						onPress={() => navigation.navigate('MusicGameFinish')}
 					>
-						<Text>Tes</Text>
+						<Text>Tes Finish</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
