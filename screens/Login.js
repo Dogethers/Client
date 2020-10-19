@@ -154,6 +154,7 @@ const Login = ({ navigation }) => {
         </TouchableOpacity>
         <View style={styles.button}>
             <TouchableOpacity
+                onPress={() => navigation.navigate('HomeTabNavigator')}
                 style={styles.signIn}
             >
                 <LinearGradient 
