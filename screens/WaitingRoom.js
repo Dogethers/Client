@@ -1,8 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import socket from '../config/socket'
 
-const WaitingRoom = ({navigation}) => {
+const WaitingRoom = ({navigation , route}) => {
+  const max = 4
+  const params = route.params
+  const [players,setPlayers] = useState([])
+
+  useEffect(()=>{
+    // username dari SecureStore.getItemAsync('username')
+    socket.emit('create_room','username')
+  },[])
+
+  useEffect(()=>{
+    socket.on('new_room',player=>{
+      setPlayers(players.concat(player))
+    })
+  },[])
+
+  useEffect(()=>{
+    socket.emit('join_room',params)
+  },[])
+  
+  useEffect(()=>{
+    socket.on('update_player',player=>{
+      setPlayers(players.concat(player))
+    })
+  },[])
+
   return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -10,10 +36,11 @@ const WaitingRoom = ({navigation}) => {
 			</View>
 
 			<View style={styles.footer}>
-				<Text style={styles.list}>3/4</Text>
-				<Text style={styles.list}>John Doe</Text>
-				<Text style={styles.list}>John Doe</Text>
-				<Text style={styles.list}>John Doe</Text>
+				<Text style={styles.list}>{players.length}/{max}</Text>
+        {players.map(player=>{
+          return <Text style={styles.list}>{player}</Text>
+        })}
+				
 
 				<View style={styles.button}>
 					<TouchableOpacity

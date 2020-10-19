@@ -100,6 +100,10 @@ const Login = ({ navigation }) => {
 						'access_token',
 						loginData.userLogin.access_token
 					);
+					SecureStore.setItemAsync(
+						'username',
+						loginData.userLogin.username
+					)
 
 					navigation.navigate('HomeTabNavigator');
 				} catch (error) {

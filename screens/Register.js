@@ -93,20 +93,6 @@ const Register = ({ navigation }) => {
 			},
 		});
 
-		if (registerData.userRegister) {
-			try {
-				SecureStore.setItemAsync(
-					'access_token',
-					registerData.userRegister.access_token
-				);
-
-				navigation.navigate('HomeTabNavigator');
-			} catch (error) {
-				console.log(error);
-			}
-		} else {
-			Alert.alert('Validation Error', 'Please complete all required fields');
-		}
 	};
 
 	return (

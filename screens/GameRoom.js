@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,8 +11,17 @@ import * as Animatable from "react-native-animatable";
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
+import socket from '../config/socket'
 
 const GameRoom = ({ navigation }) => {
+  const [rooms,setRooms] = useState([])
+
+  useEffect(()=>{
+    socket.on('created_room',room=>{
+      setRooms(rooms.concat(room))
+    })
+  },[])
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#E5E5E5" barStyle="dark-content" />
@@ -34,55 +43,22 @@ const GameRoom = ({ navigation }) => {
         <Text style={styles.title}>Join Room</Text>
 
         <ScrollView>
-          <View style={styles.action}>
+        {rooms.map((room,idx)=>{
+          return(
+            <View style={styles.action} key={idx}>
             <FontAwesome name="user-o" color="#05375a" size={20} />
-            <Text style={styles.textUser}>Bryan Rooms</Text>
+            <Text style={styles.textUser}>{room}</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("WaitingRoom")}
+            // username dari SecureStore.getItemAsync('username')
+              onPress={() => navigation.navigate("WaitingRoom",{room,username:'username 2'})}
             >
               <Feather name="arrow-right-circle" color="orange" size={20} />
             </TouchableOpacity>
           </View>
-
-          <View style={styles.action}>
-            <FontAwesome name="user-o" color="#05375a" size={20} />
-            <Text style={styles.textUser}>Rizki Rooms</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("WaitingRoom")}
-            >
-              <Feather name="arrow-right-circle" color="orange" size={20} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.action}>
-            <FontAwesome name="user-o" color="#05375a" size={20} />
-            <Text style={styles.textUser}>Syukur Rooms</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("WaitingRoom")}
-            >
-              <Feather name="arrow-right-circle" color="orange" size={20} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.action}>
-            <FontAwesome name="user-o" color="#05375a" size={20} />
-            <Text style={styles.textUser}>Samuel Rooms</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("WaitingRoom")}
-            >
-              <Feather name="arrow-right-circle" color="orange" size={20} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.action}>
-            <FontAwesome name="user-o" color="#05375a" size={20} />
-            <Text style={styles.textUser}>Vikry Rooms</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("WaitingRoom")}
-            >
-              <Feather name="arrow-right-circle" color="orange" size={20} />
-            </TouchableOpacity>
-          </View>
+          )
+        })}
+          
+          
         </ScrollView>
       </Animatable.View>
     </View>
