@@ -4,30 +4,30 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const WaitingRoom = ({navigation}) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Waiting For Other Player</Text>
-      </View>
+		<View style={styles.container}>
+			<View style={styles.header}>
+				<Text style={styles.title}>Waiting For Other Player</Text>
+			</View>
 
-      <View style={styles.footer}>
-        <Text style={styles.list}>3/4</Text>
-        <Text style={styles.list}>John Doe</Text>
-        <Text style={styles.list}>John Doe</Text>
-        <Text style={styles.list}>John Doe</Text>
+			<View style={styles.footer}>
+				<Text style={styles.list}>3/4</Text>
+				<Text style={styles.list}>John Doe</Text>
+				<Text style={styles.list}>John Doe</Text>
+				<Text style={styles.list}>John Doe</Text>
 
-        <View style={styles.button}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Welcome")}
-            style={styles.room}
-          >
-            <LinearGradient colors={["#EE6F57", "#ed5a3e"]} style={styles.room}>
-              <Text style={[styles.textRoom, { color: "#fff" }]}>Start</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
+				<View style={styles.button}>
+					<TouchableOpacity
+						onPress={() => navigation.navigate('MusicGame')}
+						style={styles.room}
+					>
+						<LinearGradient colors={['#EE6F57', '#ed5a3e']} style={styles.room}>
+							<Text style={[styles.textRoom, { color: '#fff' }]}>Start</Text>
+						</LinearGradient>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</View>
+	);
 };
 
 export default WaitingRoom;
