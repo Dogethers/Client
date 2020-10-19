@@ -8,10 +8,15 @@ import Register from "./Register";
 import HomeTabNavigator from "./HomeTabNavigator"
 import GameRoom from './GameRoom'
 import WaitingRoom from './WaitingRoom'
+import MusicGameRules from './MusicGameRules';
+import MusicGame from './MusicGame';
+import MusicGameFinish from './MusicGameFinish';
+
 
 const RootStack = createStackNavigator();
 
 const RootStackScreen = ({ navigation }) => (
+
   
     <RootStack.Navigator headerMode="none">
       <RootStack.Screen name="Welcome" component={Welcome} />
@@ -20,9 +25,11 @@ const RootStackScreen = ({ navigation }) => (
       <RootStack.Screen name="HomeTabNavigator" component={HomeTabNavigator} />
       <RootStack.Screen name="GameRoom" component={GameRoom} />
       <RootStack.Screen name="WaitingRoom" component={WaitingRoom} />
+		<RootStack.Screen name="MusicGameRules" component={MusicGameRules} />
+		<RootStack.Screen name="MusicGame" component={MusicGame} />
+		<RootStack.Screen name="MusicGameFinish" component={MusicGameFinish} />
+	</RootStack.Navigator>
 
-  </RootStack.Navigator>
-  
 );
 
 export default RootStackScreen;
