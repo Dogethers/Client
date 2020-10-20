@@ -11,9 +11,14 @@ const WaitingRoom = ({ navigation, route }) => {
 	const [players, setPlayers] = useState([]);
 	console.log(params);
 
-	useEffect(async () => {
-		const username = await SecureStore.getItemAsync('username');
-		socket.emit('create_room', username);
+	useEffect(() => {
+		async function aaa() {
+			const username = await SecureStore.getItemAsync('username');
+			if (params.status === 'host') {
+				socket.emit('create_room', username);
+			}
+		}
+		aaa();
 	}, []);
 
 	useEffect(() => {
@@ -21,7 +26,7 @@ const WaitingRoom = ({ navigation, route }) => {
 			socket.on('new_room', listPlayers => {
 				setPlayers(listPlayers);
 			});
-		} else {
+		} else if (params.status === 'member') {
 			socket.emit('join_room', params);
 		}
 	}, []);
@@ -34,6 +39,17 @@ const WaitingRoom = ({ navigation, route }) => {
 		});
 	}, []);
 
+	const handleStart = () => {
+		socket.emit('start', players[0].roomName);
+	};
+
+	useEffect(() => {
+		socket.on('start-game', songUri => {
+			console.log(songUri);
+			navigation.navigate('MusicGame', songUri);
+		});
+	}, []);
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -41,22 +57,25 @@ const WaitingRoom = ({ navigation, route }) => {
 			</View>
 
 			<View style={styles.footer}>
-				<Text style={styles.list}>{/* {players.length}/{max} */}</Text>
-				{/* {players.map(player => {
-					return <Text style={styles.list}>{player}</Text>;
-				})} */}
-				<Text>{JSON.stringify(players, null, 2)}</Text>
+				<Text style={styles.list}>
+					{players.length}/{max}
+				</Text>
+				{players.map(player => {
+					return <Text style={styles.list}>{player.name}</Text>;
+				})}
 
-				<View style={styles.button}>
-					<TouchableOpacity
-						onPress={() => navigation.navigate('MusicGame')}
-						style={styles.room}
-					>
-						<LinearGradient colors={['#EE6F57', '#ed5a3e']} style={styles.room}>
-							<Text style={[styles.textRoom, { color: '#fff' }]}>Start</Text>
-						</LinearGradient>
-					</TouchableOpacity>
-				</View>
+				{params.status === 'host' && (
+					<View style={styles.button}>
+						<TouchableOpacity onPress={() => handleStart()} style={styles.room}>
+							<LinearGradient
+								colors={['#EE6F57', '#ed5a3e']}
+								style={styles.room}
+							>
+								<Text style={[styles.textRoom, { color: '#fff' }]}>Start</Text>
+							</LinearGradient>
+						</TouchableOpacity>
+					</View>
+				)}
 			</View>
 		</View>
 	);

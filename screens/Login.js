@@ -94,21 +94,43 @@ const Login = ({ navigation }) => {
 				},
 			});
 
-			if (loginData) {
-				try {
-					SecureStore.setItemAsync(
-						'access_token',
-						loginData.userLogin.access_token
-					);
-					console.log(loginData.userLogin);
-					SecureStore.setItemAsync('username', loginData.userLogin.username);
+			try {
+				SecureStore.setItemAsync(
+					'access_token',
+					loginData.userLogin.access_token
+				);
+				console.log(loginData.userLogin);
+				SecureStore.setItemAsync('username', loginData.userLogin.username);
 
-					navigation.navigate('HomeTabNavigator');
-				} catch (error) {
-					console.log(error);
-				}
-			} else {
-				Alert.alert('Validation Error', 'Please complete all required fields');
+				navigation.navigate('HomeTabNavigator');
+			} catch (error) {
+				console.log(error);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const loginTes2 = () => {
+		try {
+			userLogin({
+				variables: {
+					email: 'tes2@mail.com',
+					password: 'tes2tes2',
+				},
+			});
+
+			try {
+				SecureStore.setItemAsync(
+					'access_token',
+					loginData.userLogin.access_token
+				);
+				console.log(loginData.userLogin);
+				SecureStore.setItemAsync('username', loginData.userLogin.username);
+
+				navigation.navigate('HomeTabNavigator');
+			} catch (error) {
+				console.log(error);
 			}
 		} catch (error) {
 			console.log(error);
@@ -188,6 +210,16 @@ const Login = ({ navigation }) => {
 							style={styles.signIn}
 						>
 							<Text style={[styles.textSign, { color: '#fff' }]}>Sign In</Text>
+						</LinearGradient>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => loginTes2()} style={styles.signIn}>
+						<LinearGradient
+							colors={['#EE6F57', '#ed5a3e']}
+							style={styles.signIn}
+						>
+							<Text style={[styles.textSign, { color: '#fff' }]}>
+								Sign In Tes2
+							</Text>
 						</LinearGradient>
 					</TouchableOpacity>
 
