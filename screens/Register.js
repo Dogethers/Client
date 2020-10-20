@@ -19,7 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useMutation } from '@apollo/client';
 import * as SecureStore from 'expo-secure-store';
 
-import { REGISTER } from '../graphql/mutations';
+import { REGISTER } from '../graphql/mutations/userMutation';
 
 const Register = ({ navigation }) => {
 	const [data, setData] = React.useState({
@@ -92,8 +92,6 @@ const Register = ({ navigation }) => {
 				isOnline: true,
 			},
 		});
-
-		if (registerData.userRegister) {
 			try {
 				SecureStore.setItemAsync(
 					'access_token',
@@ -104,9 +102,7 @@ const Register = ({ navigation }) => {
 			} catch (error) {
 				console.log(error);
 			}
-		} else {
-			Alert.alert('Validation Error', 'Please complete all required fields');
-		}
+
 	};
 
 	return (

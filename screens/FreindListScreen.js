@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
+import { useQuery, useMutation } from "@apollo/client"
+import { ADD_FRIEND, ACCEPT_FRIEND, REJECT_FRIEND } from '../graphql/mutations/friendlistMutation'
+import {  GET_FRIEND, GET_FRIEND_REQUEST } from '../graphql/queries/friendlistQuery'
 import {
   StyleSheet,
   Text,
@@ -12,11 +15,18 @@ import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const FreindListScreen = ({ navigation }) => {
+  const { data : friendData } = useQuery(GET_FRIEND)
+  const { data: requestData} = useQuery(GET_FRIEND_REQUEST)
+  const { data : addData } = useMutation(ADD_FRIEND)
+  const { data : accepData} = useMutation(ACCEPT_FRIEND)
+  const { data : rejectData } = useMutation(REJECT_FRIEND) 
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Friend Request</Text>
-
+          { friendData}
         <ScrollView>
           <View style={styles.action}>
             <FontAwesome name="user" color="#05375a" size={20} />
@@ -44,7 +54,7 @@ const FreindListScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.action}>
+          {/* <View style={styles.action}>
             <FontAwesome name="user" color="#05375a" size={20} />
             <Text style={styles.textUser}>Vikri</Text>
 
@@ -68,7 +78,7 @@ const FreindListScreen = ({ navigation }) => {
                 <Text style={[styles.textRoom, { color: "#fff" }]}>Reject</Text>
               </LinearGradient>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </ScrollView>
       </View>
 

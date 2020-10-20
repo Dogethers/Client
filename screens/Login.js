@@ -16,7 +16,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { useMutation } from '@apollo/client';
 import * as SecureStore from 'expo-secure-store';
 
-import { LOGIN } from '../graphql/mutations';
+import { LOGIN } from '../graphql/mutations/userMutation';
 
 const Login = ({ navigation }) => {
 	const [data, setData] = React.useState({
@@ -94,7 +94,6 @@ const Login = ({ navigation }) => {
 				},
 			});
 
-			if (loginData) {
 				try {
 					SecureStore.setItemAsync(
 						'access_token',
@@ -105,9 +104,6 @@ const Login = ({ navigation }) => {
 				} catch (error) {
 					console.log(error);
 				}
-			} else {
-				Alert.alert('Validation Error', 'Please complete all required fields');
-			}
 		} catch (error) {
 			console.log(error);
 		}
