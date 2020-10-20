@@ -20,8 +20,8 @@ import { LOGIN } from '../graphql/mutations';
 
 const Login = ({ navigation }) => {
 	const [data, setData] = React.useState({
-		email: '',
-		password: '',
+		email: 'tes@mail.com',
+		password: 'tes',
 		check_textInputChange: false,
 		secureTextEntry: true,
 		isValidUser: true,
@@ -99,6 +99,34 @@ const Login = ({ navigation }) => {
 					'access_token',
 					loginData.userLogin.access_token
 				);
+				console.log(loginData.userLogin);
+				SecureStore.setItemAsync('username', loginData.userLogin.username);
+
+				navigation.navigate('HomeTabNavigator');
+			} catch (error) {
+				console.log(error);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const loginTes2 = () => {
+		try {
+			userLogin({
+				variables: {
+					email: 'tes2@mail.com',
+					password: 'tes2tes2',
+				},
+			});
+
+			try {
+				SecureStore.setItemAsync(
+					'access_token',
+					loginData.userLogin.access_token
+				);
+				console.log(loginData.userLogin);
+				SecureStore.setItemAsync('username', loginData.userLogin.username);
 
 				navigation.navigate('HomeTabNavigator');
 			} catch (error) {
@@ -126,6 +154,7 @@ const Login = ({ navigation }) => {
 						autoCapitalize="none"
 						onChangeText={val => textInputChange(val)}
 						onEndEditing={e => handleValidUser(e.nativeEvent.text)}
+						value={data.email}
 					/>
 					{data.check_textInputChange ? (
 						<Animatable.View animation="bounceIn">
@@ -151,6 +180,7 @@ const Login = ({ navigation }) => {
 						style={styles.textInput}
 						autoCapitalize="none"
 						onChangeText={val => handlePasswordChange(val)}
+						value={data.password}
 					/>
 					<TouchableOpacity onPress={updateSecureEntry}>
 						{data.secureTextEntry ? (
@@ -180,6 +210,16 @@ const Login = ({ navigation }) => {
 							style={styles.signIn}
 						>
 							<Text style={[styles.textSign, { color: '#fff' }]}>Sign In</Text>
+						</LinearGradient>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => loginTes2()} style={styles.signIn}>
+						<LinearGradient
+							colors={['#EE6F57', '#ed5a3e']}
+							style={styles.signIn}
+						>
+							<Text style={[styles.textSign, { color: '#fff' }]}>
+								Sign In Tes2
+							</Text>
 						</LinearGradient>
 					</TouchableOpacity>
 

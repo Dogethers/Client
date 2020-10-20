@@ -5,26 +5,41 @@ import SpeechToTextButton from '../components/STTButton';
 
 import { Audio } from 'expo-av';
 
-const MusicGame = ({ navigation }) => {
+const MusicGame = ({ navigation,route }) => {
+	const params = route.params
 	const [playerAnswer, setPlayerAnswer] = useState('hasil transcript');
+	const [time,setTime] = useState(35000)
+	const [playMusic,setPlayMusic] = useState(false)
+	console.log(playMusic)
 
-	const play = async () => {
+	
+	const play = async (status,milis,time) => {
         console.log('masuk');
         try {
             const { sound: soundObject, status } = await Audio.Sound.createAsync(
                 {
-                    uri:
-                        'https://dogether-music.s3-ap-southeast-1.amazonaws.com/John+Mayer+-+Carry+Me+Away+(Official+Lyric+Video)+(320+kbps).mp3',
+                    uri:params,
                 },
-                { shouldPlay: true, isLooping: false }
+                { shouldPlay:true || status, isLooping: false ,positionMillis:10 || milis }
             );
-            // Your sound is playing!
+			// Your sound is playing!
+			setTimeout(async()=>{
+				soundObject.stopAsync()
+				
+			},35000 || time )
             console.log('play');
         } catch (error) {
             console.log(error);
             // An error occurred!
         }
-    };
+	};
+
+
+	const stopSong =()=>{
+		
+	}
+	
+	
 
 	return (
 		<View style={styles.container}>
@@ -53,6 +68,7 @@ const MusicGame = ({ navigation }) => {
 					</TouchableOpacity>
 				</View>
 			</View>
+			<TouchableOpacity onPress={stopSong}><Text>stop</Text></TouchableOpacity>
 			<SpeechToTextButton setPlayerAnswer={setPlayerAnswer} />
 		</View>
 	);

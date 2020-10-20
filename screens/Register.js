@@ -93,16 +93,6 @@ const Register = ({ navigation }) => {
 			},
 		});
 
-		try {
-			SecureStore.setItemAsync(
-				'access_token',
-				registerData.userRegister.access_token
-			);
-
-			navigation.navigate('HomeTabNavigator');
-		} catch (error) {
-			console.log(error);
-		}
 	};
 
 	return (

@@ -3,7 +3,9 @@ import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const MusicGameFinish = ({ navigation }) => {
+const MusicGameFinish = ({ navigation, route }) => {
+	const params = route.params;
+	console.log(params);
 	return (
 		<View style={styles.container}>
 			<Text style={styles.congratsText}>Congrats</Text>
