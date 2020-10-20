@@ -99,7 +99,7 @@ const FreindListScreen = ({ navigation }) => {
             <FontAwesome name="user" color="#05375a" size={20} />
             <Text style={styles.textUser}>Bryan</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("WaitingRoom")}
+              onPress={() => navigation.navigate("ChatRoom")}
             >
               <LinearGradient
                 colors={["#EE6F57", "#ed5a3e"]}
@@ -114,7 +114,7 @@ const FreindListScreen = ({ navigation }) => {
             <FontAwesome name="user" color="#05375a" size={20} />
             <Text style={styles.textUser}>Bryan</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("WaitingRoom")}
+              onPress={() => navigation.navigate("ChatRoom")}
             >
               <LinearGradient
                 colors={["#EE6F57", "#ed5a3e"]}

@@ -11,6 +11,7 @@ import WaitingRoom from './WaitingRoom'
 import MusicGameRules from './MusicGameRules';
 import MusicGame from './MusicGame';
 import MusicGameFinish from './MusicGameFinish';
+import ChatRoom from './ChatRoom'
 
 
 const RootStack = createStackNavigator();
@@ -28,6 +29,7 @@ const RootStackScreen = ({ navigation }) => (
 		<RootStack.Screen name="MusicGameRules" component={MusicGameRules} />
 		<RootStack.Screen name="MusicGame" component={MusicGame} />
 		<RootStack.Screen name="MusicGameFinish" component={MusicGameFinish} />
+    <RootStack.Screen name="ChatRoom" component={ChatRoom} />
 	</RootStack.Navigator>
 
 );

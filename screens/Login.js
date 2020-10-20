@@ -94,19 +94,15 @@ const Login = ({ navigation }) => {
 				},
 			});
 
-			if (loginData) {
-				try {
-					SecureStore.setItemAsync(
-						'access_token',
-						loginData.userLogin.access_token
-					);
+			try {
+				SecureStore.setItemAsync(
+					'access_token',
+					loginData.userLogin.access_token
+				);
 
-					navigation.navigate('HomeTabNavigator');
-				} catch (error) {
-					console.log(error);
-				}
-			} else {
-				Alert.alert('Validation Error', 'Please complete all required fields');
+				navigation.navigate('HomeTabNavigator');
+			} catch (error) {
+				console.log(error);
 			}
 		} catch (error) {
 			console.log(error);
