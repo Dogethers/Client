@@ -20,8 +20,8 @@ import { LOGIN } from '../graphql/mutations';
 
 const Login = ({ navigation }) => {
 	const [data, setData] = React.useState({
-		email: '',
-		password: '',
+		email: 'tes@mail.com',
+		password: 'tes',
 		check_textInputChange: false,
 		secureTextEntry: true,
 		isValidUser: true,
@@ -100,10 +100,8 @@ const Login = ({ navigation }) => {
 						'access_token',
 						loginData.userLogin.access_token
 					);
-					SecureStore.setItemAsync(
-						'username',
-						loginData.userLogin.username
-					)
+					console.log(loginData.userLogin);
+					SecureStore.setItemAsync('username', loginData.userLogin.username);
 
 					navigation.navigate('HomeTabNavigator');
 				} catch (error) {
@@ -134,6 +132,7 @@ const Login = ({ navigation }) => {
 						autoCapitalize="none"
 						onChangeText={val => textInputChange(val)}
 						onEndEditing={e => handleValidUser(e.nativeEvent.text)}
+						value={data.email}
 					/>
 					{data.check_textInputChange ? (
 						<Animatable.View animation="bounceIn">
@@ -159,6 +158,7 @@ const Login = ({ navigation }) => {
 						style={styles.textInput}
 						autoCapitalize="none"
 						onChangeText={val => handlePasswordChange(val)}
+						value={data.password}
 					/>
 					<TouchableOpacity onPress={updateSecureEntry}>
 						{data.secureTextEntry ? (

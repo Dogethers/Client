@@ -1,46 +1,51 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import socket from '../config/socket'
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import socket from '../config/socket';
 
-const WaitingRoom = ({navigation , route}) => {
-  const max = 4
-  const params = route.params
-  const [players,setPlayers] = useState([])
+import * as SecureStore from 'expo-secure-store';
 
-  useEffect(()=>{
-    // username dari SecureStore.getItemAsync('username')
-    socket.emit('create_room','username')
-  },[])
+const WaitingRoom = ({ navigation, route }) => {
+	const max = 4;
+	const params = route.params;
+	const [players, setPlayers] = useState([]);
+	console.log(params);
 
-  useEffect(()=>{
-    socket.on('new_room',player=>{
-      setPlayers(players.concat(player))
-    })
-  },[])
+	useEffect(async () => {
+		const username = await SecureStore.getItemAsync('username');
+		socket.emit('create_room', username);
+	}, []);
 
-  useEffect(()=>{
-    socket.emit('join_room',params)
-  },[])
-  
-  useEffect(()=>{
-    socket.on('update_player',player=>{
-      setPlayers(players.concat(player))
-    })
-  },[])
+	useEffect(() => {
+		if (params.status === 'host') {
+			socket.on('new_room', listPlayers => {
+				setPlayers(listPlayers);
+			});
+		} else {
+			socket.emit('join_room', params);
+		}
+	}, []);
 
-  return (
+	useEffect(() => {
+		console.log('masuk uopdate');
+		socket.on('update_player', listPlayers => {
+			console.log(listPlayers, '<<< update players');
+			setPlayers(listPlayers);
+		});
+	}, []);
+
+	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<Text style={styles.title}>Waiting For Other Player</Text>
 			</View>
 
 			<View style={styles.footer}>
-				<Text style={styles.list}>{players.length}/{max}</Text>
-        {players.map(player=>{
-          return <Text style={styles.list}>{player}</Text>
-        })}
-				
+				<Text style={styles.list}>{/* {players.length}/{max} */}</Text>
+				{/* {players.map(player => {
+					return <Text style={styles.list}>{player}</Text>;
+				})} */}
+				<Text>{JSON.stringify(players, null, 2)}</Text>
 
 				<View style={styles.button}>
 					<TouchableOpacity
@@ -60,47 +65,47 @@ const WaitingRoom = ({navigation , route}) => {
 export default WaitingRoom;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFF",
-  },
-  header: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  footer: {
-    flex: 1,
-    backgroundColor: "#E5E5E5",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  list: {
-    fontSize: 22,
-    fontWeight: "bold",
-  },
-  button: {
-    alignItems: "center",
-    marginTop: 50,
-  },
-  room: {
-    width: 150,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-  },
-  textRoom: {
-    fontSize: 22,
-    fontWeight: "bold",
-    padding: 20,
-  },
+	container: {
+		flex: 1,
+		backgroundColor: '#FFF',
+	},
+	header: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#fff',
+	},
+	footer: {
+		flex: 1,
+		backgroundColor: '#E5E5E5',
+		borderTopLeftRadius: 30,
+		borderTopRightRadius: 30,
+		paddingHorizontal: 20,
+		paddingVertical: 30,
+		alignItems: 'center',
+	},
+	title: {
+		fontSize: 24,
+		fontWeight: 'bold',
+	},
+	list: {
+		fontSize: 22,
+		fontWeight: 'bold',
+	},
+	button: {
+		alignItems: 'center',
+		marginTop: 50,
+	},
+	room: {
+		width: 150,
+		height: 50,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 10,
+	},
+	textRoom: {
+		fontSize: 22,
+		fontWeight: 'bold',
+		padding: 20,
+	},
 });

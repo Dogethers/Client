@@ -1,6 +1,6 @@
-import socketIOClient from "socket.io-client";
+import socketIOClient from 'socket.io-client';
 
-const ENDPOINT = "http://192.168.100.44:7005";
+const ENDPOINT = 'http://192.168.1.11:3001';
 
 const socket = socketIOClient(ENDPOINT);
 
