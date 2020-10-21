@@ -84,15 +84,29 @@ const Register = ({ navigation }) => {
 	const [userRegister, { data: registerData }] = useMutation(REGISTER);
 
 	const register = () => {
-		userRegister({
-			variables: {
-				username: data.username,
-				password: data.password,
-				email: data.email,
-				isOnline: true,
-			},
-		});
+		try {
+			userRegister({
+				variables: {
+					username: data.username,
+					password: data.password,
+					email: data.email,
+					isOnline: true,
+				},
+			});
 
+			try {
+				SecureStore.setItemAsync(
+					'access_token',
+					registerData.userLogin.access_token
+				);
+
+				navigation.navigate('HomeTabNavigator');
+			} catch (error) {
+				console.log(error);
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (

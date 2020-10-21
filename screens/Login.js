@@ -20,8 +20,8 @@ import { LOGIN } from '../graphql/mutations';
 
 const Login = ({ navigation }) => {
 	const [data, setData] = React.useState({
-		email: 'tes@mail.com',
-		password: 'tes',
+		email: '',
+		password: '',
 		check_textInputChange: false,
 		secureTextEntry: true,
 		isValidUser: true,
@@ -85,52 +85,32 @@ const Login = ({ navigation }) => {
 
 	const [userLogin, { data: loginData }] = useMutation(LOGIN);
 
-	const login = () => {
+	const login = async () => {
 		try {
-			userLogin({
+			const loginResponse = await userLogin({
 				variables: {
 					email: data.email,
 					password: data.password,
 				},
 			});
 
-			try {
-				SecureStore.setItemAsync(
-					'access_token',
-					loginData.userLogin.access_token
-				);
-				console.log(loginData.userLogin);
-				SecureStore.setItemAsync('username', loginData.userLogin.username);
+			console.log(loginResponse);
 
-				navigation.navigate('HomeTabNavigator');
-			} catch (error) {
-				console.log(error);
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
+			if (loginResponse) {
+				try {
+					await SecureStore.setItemAsync(
+						'access_token',
+						loginResponse.data.userLogin.access_token
+					);
+					await SecureStore.setItemAsync(
+						'username',
+						loginResponse.data.userLogin.username
+					);
 
-	const loginTes2 = () => {
-		try {
-			userLogin({
-				variables: {
-					email: 'tes2@mail.com',
-					password: 'tes2tes2',
-				},
-			});
-
-			try {
-				SecureStore.setItemAsync(
-					'access_token',
-					loginData.userLogin.access_token
-				);
-				console.log(loginData.userLogin);
-				SecureStore.setItemAsync('username', loginData.userLogin.username);
-
-				navigation.navigate('HomeTabNavigator');
-			} catch (error) {
-				console.log(error);
+					navigation.navigate('HomeTabNavigator');
+				} catch (error) {
+					console.log(error);
+				}
 			}
 		} catch (error) {
 			console.log(error);
@@ -210,16 +190,6 @@ const Login = ({ navigation }) => {
 							style={styles.signIn}
 						>
 							<Text style={[styles.textSign, { color: '#fff' }]}>Sign In</Text>
-						</LinearGradient>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={() => loginTes2()} style={styles.signIn}>
-						<LinearGradient
-							colors={['#EE6F57', '#ed5a3e']}
-							style={styles.signIn}
-						>
-							<Text style={[styles.textSign, { color: '#fff' }]}>
-								Sign In Tes2
-							</Text>
 						</LinearGradient>
 					</TouchableOpacity>
 

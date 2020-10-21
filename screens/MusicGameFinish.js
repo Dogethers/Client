@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import socket from '../config/socket';
 
 const MusicGameFinish = ({ navigation, route }) => {
-	const params = route.params;
+	const { playerList } = route.params;
 
 	const handlePlayAgain = () => {
 		socket.emit('start-again');
@@ -15,14 +15,19 @@ const MusicGameFinish = ({ navigation, route }) => {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.congratsText}>Congrats</Text>
+			{/* <Text style={styles.congratsText}>Congrats</Text> */}
 			<View style={styles.leaderboard}>
 				<Text style={styles.leaderboardText}>Leaderboard</Text>
 				<View style={styles.leaderboardPlayers}>
-					<Text style={styles.leaderboardPlayer}>1. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>2. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>3. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>4. John Doe</Text>
+					{playerList
+						.sort((a, b) => b.score - a.score)
+						.map((player, i) => {
+							return (
+								<Text key={i} style={styles.leaderboardPlayer}>
+									{i + 1}. {player.name} ({player.score})
+								</Text>
+							);
+						})}
 				</View>
 			</View>
 			<TouchableOpacity

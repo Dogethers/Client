@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 import SpeechToTextButton from '../components/STTButton';
 
 import { Audio } from 'expo-av';
@@ -9,7 +10,7 @@ import socket from '../config/socket';
 
 const MusicGame = ({ navigation, route }) => {
 	const { songUri, songAnswer, playerList } = route.params;
-	const [playerAnswer, setPlayerAnswer] = useState('Carry Me Away');
+	const [playerAnswer, setPlayerAnswer] = useState('');
 
 	const sound = new Audio.Sound();
 
@@ -21,8 +22,6 @@ const MusicGame = ({ navigation, route }) => {
 		play();
 		console.log('play');
 	}, []);
-
-	// console.log(sound);
 
 	const submitAnswer = async () => {
 		await sound.stopAsync();
@@ -70,14 +69,11 @@ const MusicGame = ({ navigation, route }) => {
 		<View style={styles.container}>
 			<View style={styles.songBox}>
 				<Text style={styles.songText}>Playing the song...</Text>
-				{/* <TouchableOpacity onPress={() => play()}>
-					<Text>Tes Play Song</Text>
-				</TouchableOpacity> */}
 			</View>
 			<View style={styles.answerBox}>
 				<Text style={styles.answerText}>{playerAnswer}</Text>
 			</View>
-			<View style={styles.leaderboard}>
+			{/* <View style={styles.leaderboard}>
 				<Text style={styles.leaderboardText}>Leaderboard</Text>
 				<View style={styles.leaderboardPlayers}>
 					<Text style={styles.leaderboardPlayer}>1. John Doe</Text>
@@ -90,9 +86,22 @@ const MusicGame = ({ navigation, route }) => {
 						<Text>Tes Finish</Text>
 					</TouchableOpacity>
 				</View>
+			</View> */}
+			<View style={styles.button}>
+				<TouchableOpacity onPress={() => submitAnswer()} style={styles.room}>
+					<LinearGradient colors={['#EE6F57', '#ed5a3e']} style={styles.room}>
+						<Text style={[styles.textRoom, { color: '#fff' }]}>Submit</Text>
+					</LinearGradient>
+				</TouchableOpacity>
 			</View>
-			<TouchableOpacity onPress={submitAnswer}>
-				<Text>Submit</Text>
+			<TouchableOpacity onPress={() => setPlayerAnswer('Carry Me Away')}>
+				<Text>Tes Answer round 1</Text>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={() => setPlayerAnswer('New Light')}>
+				<Text>Tes Answer round 2</Text>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={() => setPlayerAnswer('Just The Way You Are')}>
+				<Text>Tes Answer round 3</Text>
 			</TouchableOpacity>
 			<SpeechToTextButton setPlayerAnswer={setPlayerAnswer} />
 		</View>
@@ -170,5 +179,22 @@ const styles = StyleSheet.create({
 
 	leaderboardPlayer: {
 		fontSize: 20,
+	},
+
+	button: {
+		alignItems: 'center',
+		marginTop: 50,
+	},
+	room: {
+		width: 150,
+		height: 50,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 10,
+	},
+	textRoom: {
+		fontSize: 22,
+		fontWeight: 'bold',
+		padding: 20,
 	},
 });
