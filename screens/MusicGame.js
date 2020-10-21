@@ -24,7 +24,7 @@ const MusicGame = ({ navigation, route }) => {
 	}, []);
 
 	const submitAnswer = async () => {
-		await sound.stopAsync();
+		await sound.unloadAsync();
 		console.log('stopped');
 
 		// to be improved to similiarity
