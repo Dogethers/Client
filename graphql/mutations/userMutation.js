@@ -2,10 +2,10 @@ import { gql, useMutation } from '@apollo/client';
 
 export const REGISTER = gql`
 	mutation userRegister(
-		$username: String!
-		$email: String!
-		$password: String!
-		$isOnline: Boolean!
+		$username: String
+		$email: String
+		$password: String
+		$isOnline: Boolean
 	) {
 		userRegister(
 			username: $username
@@ -19,7 +19,7 @@ export const REGISTER = gql`
 `;
 
 export const LOGIN = gql`
-	mutation userLogin($email: String!, $password: String!) {
+	mutation userLogin($email: String, $password: String) {
 		userLogin(email: $email, password: $password) {
 			access_token
 		}

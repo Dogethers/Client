@@ -16,7 +16,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { useMutation } from '@apollo/client';
 import * as SecureStore from 'expo-secure-store';
 
-import { LOGIN } from '../graphql/mutations';
+import { LOGIN } from '../graphql/mutations/userMutation';
 
 const Login = ({ navigation }) => {
 	const [data, setData] = React.useState({
