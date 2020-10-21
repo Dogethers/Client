@@ -20,12 +20,6 @@ const HomeScreen = ({ navigation }) => {
             <GambarMusic width={228} height={176} />
         </TouchableOpacity>
       </View>
-      <Animatable.View style={styles.footer} animation="fadeInUpBig">
-      <Text style={styles.title}>Guess the picture</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("GameRoom")}>
-            <GambarTebak width={228} height={176} />
-        </TouchableOpacity>
-      </Animatable.View>
     </View>
   );
 };
