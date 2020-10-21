@@ -19,7 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useMutation } from '@apollo/client';
 import * as SecureStore from 'expo-secure-store';
 
-import { REGISTER } from '../graphql/mutations';
+import { REGISTER } from '../graphql/mutations/userMutation';
 
 const Register = ({ navigation }) => {
 	const [data, setData] = React.useState({
@@ -103,6 +103,7 @@ const Register = ({ navigation }) => {
 		} catch (error) {
 			console.log(error);
 		}
+
 	};
 
 	return (
