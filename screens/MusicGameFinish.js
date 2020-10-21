@@ -3,22 +3,36 @@ import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const MusicGameFinish = ({ navigation }) => {
+import socket from '../config/socket';
+
+const MusicGameFinish = ({ navigation, route }) => {
+	const { playerList } = route.params;
+
+	const handlePlayAgain = () => {
+		socket.emit('start-again');
+		navigation.navigate('Home');
+	};
+
 	return (
 		<View style={styles.container}>
-			<Text style={styles.congratsText}>Congrats</Text>
+			{/* <Text style={styles.congratsText}>Congrats</Text> */}
 			<View style={styles.leaderboard}>
 				<Text style={styles.leaderboardText}>Leaderboard</Text>
 				<View style={styles.leaderboardPlayers}>
-					<Text style={styles.leaderboardPlayer}>1. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>2. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>3. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>4. John Doe</Text>
+					{playerList
+						.sort((a, b) => b.score - a.score)
+						.map((player, i) => {
+							return (
+								<Text key={i} style={styles.leaderboardPlayer}>
+									{i + 1}. {player.name} ({player.score})
+								</Text>
+							);
+						})}
 				</View>
 			</View>
 			<TouchableOpacity
 				style={styles.playAgain}
-				onPress={() => navigation.navigate('Home')}
+				onPress={() => handlePlayAgain()}
 			>
 				<LinearGradient
 					colors={['#EE6F57', '#ed5a3e']}
@@ -33,26 +47,6 @@ const MusicGameFinish = ({ navigation }) => {
 						]}
 					>
 						Play Again
-					</Text>
-				</LinearGradient>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.playAgain}
-				onPress={() => navigation.navigate('Home')}
-			>
-				<LinearGradient
-					colors={['#203C87', '#203C87']}
-					style={styles.playAgain}
-				>
-					<Text
-						style={[
-							styles.textStart,
-							{
-								color: '#fff',
-							},
-						]}
-					>
-						Play Different Game
 					</Text>
 				</LinearGradient>
 			</TouchableOpacity>

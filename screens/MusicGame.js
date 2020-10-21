@@ -1,45 +1,79 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 import SpeechToTextButton from '../components/STTButton';
 
 import { Audio } from 'expo-av';
+import * as SecureStore from 'expo-secure-store';
+import socket from '../config/socket';
 
-const MusicGame = ({ navigation }) => {
-	const [playerAnswer, setPlayerAnswer] = useState('hasil transcript');
+const MusicGame = ({ navigation, route }) => {
+	const { songUri, songAnswer, playerList } = route.params;
+	const [playerAnswer, setPlayerAnswer] = useState('');
 
-	const play = async () => {
-        console.log('masuk');
-        try {
-            const { sound: soundObject, status } = await Audio.Sound.createAsync(
-                {
-                    uri:
-                        'https://dogether-music.s3-ap-southeast-1.amazonaws.com/John+Mayer+-+Carry+Me+Away+(Official+Lyric+Video)+(320+kbps).mp3',
-                },
-                { shouldPlay: true, isLooping: false }
-            );
-            // Your sound is playing!
-            console.log('play');
-        } catch (error) {
-            console.log(error);
-            // An error occurred!
-        }
-    };
+	const sound = new Audio.Sound();
+
+	useEffect(() => {
+		async function play() {
+			await sound.loadAsync({ uri: songUri });
+			await sound.playAsync();
+		}
+		play();
+		console.log('play');
+	}, []);
+
+	const submitAnswer = async () => {
+		await sound.unloadAsync();
+		console.log('stopped');
+
+		// to be improved to similiarity
+		if (playerAnswer.toLowerCase() === songAnswer.toLowerCase()) {
+			console.log('correct!');
+			const username = await SecureStore.getItemAsync('username');
+			console.log(playerList);
+			const roomName = playerList[0].roomName;
+			socket.emit('next-round-win', roomName, username);
+		} else {
+			console.log('incorrect!');
+		}
+	};
+
+	useEffect(() => {
+		socket.on('next-round-lose', async (songUri, songAnswer, round) => {
+			await sound.stopAsync();
+			console.log('stopped');
+			console.log(playerList);
+
+			if (round <= 2) {
+				navigation.push('MusicGame', {
+					songUri,
+					songAnswer,
+					playerList,
+				});
+			} else {
+				socket.emit('last-round');
+			}
+		});
+	}, []);
+
+	useEffect(() => {
+		socket.on('game-end', async playerList => {
+			console.log(playerList, '<<<< end');
+			await sound.unloadAsync();
+			navigation.navigate('MusicGameFinish', { playerList });
+		});
+	}, []);
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.songBox}>
 				<Text style={styles.songText}>Playing the song...</Text>
-				<TouchableOpacity
-						onPress={() => play()}
-					>
-						<Text>Tes Play Song</Text>
-					</TouchableOpacity>
 			</View>
 			<View style={styles.answerBox}>
 				<Text style={styles.answerText}>{playerAnswer}</Text>
 			</View>
-			<View style={styles.leaderboard}>
+			{/* <View style={styles.leaderboard}>
 				<Text style={styles.leaderboardText}>Leaderboard</Text>
 				<View style={styles.leaderboardPlayers}>
 					<Text style={styles.leaderboardPlayer}>1. John Doe</Text>
@@ -52,7 +86,23 @@ const MusicGame = ({ navigation }) => {
 						<Text>Tes Finish</Text>
 					</TouchableOpacity>
 				</View>
+			</View> */}
+			<View style={styles.button}>
+				<TouchableOpacity onPress={() => submitAnswer()} style={styles.room}>
+					<LinearGradient colors={['#EE6F57', '#ed5a3e']} style={styles.room}>
+						<Text style={[styles.textRoom, { color: '#fff' }]}>Submit</Text>
+					</LinearGradient>
+				</TouchableOpacity>
 			</View>
+			<TouchableOpacity onPress={() => setPlayerAnswer('Carry Me Away')}>
+				<Text>Tes Answer round 1</Text>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={() => setPlayerAnswer('New Light')}>
+				<Text>Tes Answer round 2</Text>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={() => setPlayerAnswer('Just The Way You Are')}>
+				<Text>Tes Answer round 3</Text>
+			</TouchableOpacity>
 			<SpeechToTextButton setPlayerAnswer={setPlayerAnswer} />
 		</View>
 	);
@@ -129,5 +179,22 @@ const styles = StyleSheet.create({
 
 	leaderboardPlayer: {
 		fontSize: 20,
+	},
+
+	button: {
+		alignItems: 'center',
+		marginTop: 50,
+	},
+	room: {
+		width: 150,
+		height: 50,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 10,
+	},
+	textRoom: {
+		fontSize: 22,
+		fontWeight: 'bold',
+		padding: 20,
 	},
 });

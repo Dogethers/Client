@@ -85,24 +85,32 @@ const Login = ({ navigation }) => {
 
 	const [userLogin, { data: loginData }] = useMutation(LOGIN);
 
-	const login = () => {
+	const login = async () => {
 		try {
-			userLogin({
+			const loginResponse = await userLogin({
 				variables: {
 					email: data.email,
 					password: data.password,
 				},
 			});
 
-			try {
-				SecureStore.setItemAsync(
-					'access_token',
-					loginData.userLogin.access_token
-				);
+			console.log(loginResponse);
 
-				navigation.navigate('HomeTabNavigator');
-			} catch (error) {
-				console.log(error);
+			if (loginResponse) {
+				try {
+					await SecureStore.setItemAsync(
+						'access_token',
+						loginResponse.data.userLogin.access_token
+					);
+					await SecureStore.setItemAsync(
+						'username',
+						loginResponse.data.userLogin.username
+					);
+
+					navigation.navigate('HomeTabNavigator');
+				} catch (error) {
+					console.log(error);
+				}
 			}
 		} catch (error) {
 			console.log(error);
@@ -126,6 +134,7 @@ const Login = ({ navigation }) => {
 						autoCapitalize="none"
 						onChangeText={val => textInputChange(val)}
 						onEndEditing={e => handleValidUser(e.nativeEvent.text)}
+						value={data.email}
 					/>
 					{data.check_textInputChange ? (
 						<Animatable.View animation="bounceIn">
@@ -151,6 +160,7 @@ const Login = ({ navigation }) => {
 						style={styles.textInput}
 						autoCapitalize="none"
 						onChangeText={val => handlePasswordChange(val)}
+						value={data.password}
 					/>
 					<TouchableOpacity onPress={updateSecureEntry}>
 						{data.secureTextEntry ? (
