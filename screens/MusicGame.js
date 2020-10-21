@@ -73,20 +73,6 @@ const MusicGame = ({ navigation, route }) => {
 			<View style={styles.answerBox}>
 				<Text style={styles.answerText}>{playerAnswer}</Text>
 			</View>
-			{/* <View style={styles.leaderboard}>
-				<Text style={styles.leaderboardText}>Leaderboard</Text>
-				<View style={styles.leaderboardPlayers}>
-					<Text style={styles.leaderboardPlayer}>1. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>2. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>3. John Doe</Text>
-					<Text style={styles.leaderboardPlayer}>4. John Doe</Text>
-					<TouchableOpacity
-						onPress={() => navigation.navigate('MusicGameFinish')}
-					>
-						<Text>Tes Finish</Text>
-					</TouchableOpacity>
-				</View>
-			</View> */}
 			<View style={styles.button}>
 				<TouchableOpacity onPress={() => submitAnswer()} style={styles.room}>
 					<LinearGradient colors={['#EE6F57', '#ed5a3e']} style={styles.room}>
@@ -94,15 +80,6 @@ const MusicGame = ({ navigation, route }) => {
 					</LinearGradient>
 				</TouchableOpacity>
 			</View>
-			<TouchableOpacity onPress={() => setPlayerAnswer('Carry Me Away')}>
-				<Text>Tes Answer round 1</Text>
-			</TouchableOpacity>
-			<TouchableOpacity onPress={() => setPlayerAnswer('New Light')}>
-				<Text>Tes Answer round 2</Text>
-			</TouchableOpacity>
-			<TouchableOpacity onPress={() => setPlayerAnswer('Just The Way You Are')}>
-				<Text>Tes Answer round 3</Text>
-			</TouchableOpacity>
 			<SpeechToTextButton setPlayerAnswer={setPlayerAnswer} />
 		</View>
 	);
@@ -117,23 +94,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: '#F6F5F5',
 		alignItems: 'center',
-	},
-
-	leaderboard: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-		backgroundColor: '#FFF',
-		borderRadius: 20,
-		height: 200,
-		width: screenWidth - 30,
-		fontWeight: 'bold',
-		marginTop: 30,
-	},
-
-	leaderboardText: {
-		fontWeight: '600',
-		fontSize: 20,
 	},
 
 	songBox: {
@@ -170,14 +130,6 @@ const styles = StyleSheet.create({
 
 	answerText: {
 		fontWeight: 'bold',
-		fontSize: 20,
-	},
-
-	leaderboardPlayers: {
-		width: screenWidth - 200,
-	},
-
-	leaderboardPlayer: {
 		fontSize: 20,
 	},
 
