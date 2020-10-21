@@ -3,9 +3,16 @@ import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import socket from '../config/socket';
+
 const MusicGameFinish = ({ navigation, route }) => {
 	const params = route.params;
-	console.log(params);
+
+	const handlePlayAgain = () => {
+		socket.emit('start-again');
+		navigation.navigate('Home');
+	};
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.congratsText}>Congrats</Text>
@@ -20,7 +27,7 @@ const MusicGameFinish = ({ navigation, route }) => {
 			</View>
 			<TouchableOpacity
 				style={styles.playAgain}
-				onPress={() => navigation.navigate('Home')}
+				onPress={() => handlePlayAgain()}
 			>
 				<LinearGradient
 					colors={['#EE6F57', '#ed5a3e']}
@@ -35,26 +42,6 @@ const MusicGameFinish = ({ navigation, route }) => {
 						]}
 					>
 						Play Again
-					</Text>
-				</LinearGradient>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.playAgain}
-				onPress={() => navigation.navigate('Home')}
-			>
-				<LinearGradient
-					colors={['#203C87', '#203C87']}
-					style={styles.playAgain}
-				>
-					<Text
-						style={[
-							styles.textStart,
-							{
-								color: '#fff',
-							},
-						]}
-					>
-						Play Different Game
 					</Text>
 				</LinearGradient>
 			</TouchableOpacity>

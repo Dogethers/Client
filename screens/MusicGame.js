@@ -1,55 +1,78 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import SpeechToTextButton from '../components/STTButton';
 
 import { Audio } from 'expo-av';
+import * as SecureStore from 'expo-secure-store';
+import socket from '../config/socket';
 
-const MusicGame = ({ navigation,route }) => {
-	const params = route.params
-	const [playerAnswer, setPlayerAnswer] = useState('hasil transcript');
-	const [time,setTime] = useState(35000)
-	const [playMusic,setPlayMusic] = useState(false)
-	console.log(playMusic)
+const MusicGame = ({ navigation, route }) => {
+	const { songUri, songAnswer, playerList } = route.params;
+	const [playerAnswer, setPlayerAnswer] = useState('Carry Me Away');
 
-	
-	const play = async (status,milis,time) => {
-        console.log('masuk');
-        try {
-            const { sound: soundObject, status } = await Audio.Sound.createAsync(
-                {
-                    uri:params,
-                },
-                { shouldPlay:true || status, isLooping: false ,positionMillis:10 || milis }
-            );
-			// Your sound is playing!
-			setTimeout(async()=>{
-				soundObject.stopAsync()
-				
-			},35000 || time )
-            console.log('play');
-        } catch (error) {
-            console.log(error);
-            // An error occurred!
-        }
+	const sound = new Audio.Sound();
+
+	useEffect(() => {
+		async function play() {
+			await sound.loadAsync({ uri: songUri });
+			await sound.playAsync();
+		}
+		play();
+		console.log('play');
+	}, []);
+
+	// console.log(sound);
+
+	const submitAnswer = async () => {
+		await sound.stopAsync();
+		console.log('stopped');
+
+		// to be improved to similiarity
+		if (playerAnswer.toLowerCase() === songAnswer.toLowerCase()) {
+			console.log('correct!');
+			const username = await SecureStore.getItemAsync('username');
+			console.log(playerList);
+			const roomName = playerList[0].roomName;
+			socket.emit('next-round-win', roomName, username);
+		} else {
+			console.log('incorrect!');
+		}
 	};
 
+	useEffect(() => {
+		socket.on('next-round-lose', async (songUri, songAnswer, round) => {
+			await sound.stopAsync();
+			console.log('stopped');
+			console.log(playerList);
 
-	const stopSong =()=>{
-		
-	}
-	
-	
+			if (round <= 2) {
+				navigation.push('MusicGame', {
+					songUri,
+					songAnswer,
+					playerList,
+				});
+			} else {
+				socket.emit('last-round');
+			}
+		});
+	}, []);
+
+	useEffect(() => {
+		socket.on('game-end', async playerList => {
+			console.log(playerList, '<<<< end');
+			await sound.unloadAsync();
+			navigation.navigate('MusicGameFinish', { playerList });
+		});
+	}, []);
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.songBox}>
 				<Text style={styles.songText}>Playing the song...</Text>
-				<TouchableOpacity
-						onPress={() => play()}
-					>
-						<Text>Tes Play Song</Text>
-					</TouchableOpacity>
+				{/* <TouchableOpacity onPress={() => play()}>
+					<Text>Tes Play Song</Text>
+				</TouchableOpacity> */}
 			</View>
 			<View style={styles.answerBox}>
 				<Text style={styles.answerText}>{playerAnswer}</Text>
@@ -68,7 +91,9 @@ const MusicGame = ({ navigation,route }) => {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<TouchableOpacity onPress={stopSong}><Text>stop</Text></TouchableOpacity>
+			<TouchableOpacity onPress={submitAnswer}>
+				<Text>Submit</Text>
+			</TouchableOpacity>
 			<SpeechToTextButton setPlayerAnswer={setPlayerAnswer} />
 		</View>
 	);

@@ -9,7 +9,7 @@ const WaitingRoom = ({ navigation, route }) => {
 	const max = 4;
 	const params = route.params;
 	const [players, setPlayers] = useState([]);
-	console.log(params,'params');
+	console.log(params, 'params');
 
 	useEffect(() => {
 		async function aaa() {
@@ -42,14 +42,19 @@ const WaitingRoom = ({ navigation, route }) => {
 	const handleStart = () => {
 		socket.emit('start', players[0].roomName);
 		// socket.emit('start', `tes's Room`);
-		
-		console.log('start')
+
+		console.log('start');
 	};
 
 	useEffect(() => {
-		socket.on('start-game', songUri => {
-			console.log(songUri);
-			navigation.navigate('MusicGame', songUri);
+		socket.on('start-game', (songUri, songAnswer, playerList) => {
+			console.log(songUri, songAnswer);
+			console.log(playerList);
+			navigation.navigate('MusicGame', {
+				songUri,
+				songAnswer,
+				playerList,
+			});
 		});
 	}, []);
 
@@ -63,8 +68,12 @@ const WaitingRoom = ({ navigation, route }) => {
 				<Text style={styles.list}>
 					{players.length}/{max}
 				</Text>
-				{players.map((player,idx) => {
-					return <Text key={idx} style={styles.list}>{player.name}</Text>;
+				{players.map((player, idx) => {
+					return (
+						<Text key={idx} style={styles.list}>
+							{player.name}
+						</Text>
+					);
 				})}
 
 				{params.status === 'host' && (

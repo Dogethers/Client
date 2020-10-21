@@ -19,8 +19,8 @@ import * as SecureStore from 'expo-secure-store';
 const GameRoom = ({ navigation }) => {
 	const [rooms, setRooms] = useState([]);
 	const [username, setUsername] = useState('');
-	console.log(username,'state')
-	console.log(rooms,'rooms')
+	console.log(username, 'state');
+	console.log(rooms, 'rooms');
 
 	useEffect(() => {
 		socket.on('created_room', room => {
@@ -29,22 +29,22 @@ const GameRoom = ({ navigation }) => {
 	}, []);
 
 	useEffect(() => {
-		const getUsername = async()=>{
+		const getUsername = async () => {
 			const username = await SecureStore.getItemAsync('username');
-			console.log(username,'useff gameroom')
+			console.log(username, 'useff gameroom');
 			setUsername(username);
-			return username
-		}
-		getUsername()
+			return username;
+		};
+		getUsername();
 	}, []);
 
-	const handleJoin = (room) =>{
+	const handleJoin = room => {
 		navigation.navigate('WaitingRoom', {
 			room,
 			username,
 			status: 'member',
-		})
-	}
+		});
+	};
 
 	return (
 		<View style={styles.container}>
@@ -74,10 +74,7 @@ const GameRoom = ({ navigation }) => {
 							<View style={styles.action} key={idx}>
 								<FontAwesome name="user-o" color="#05375a" size={20} />
 								<Text style={styles.textUser}>{room}</Text>
-								<TouchableOpacity
-									onPress={()=>handleJoin(room)}
-									
-								>
+								<TouchableOpacity onPress={() => handleJoin(room)}>
 									<Feather name="arrow-right-circle" color="orange" size={20} />
 								</TouchableOpacity>
 							</View>
