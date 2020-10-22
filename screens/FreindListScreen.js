@@ -14,40 +14,62 @@ import * as Animatable from "react-native-animatable";
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import * as SecureStore from 'expo-secure-store'
+import { GET_ALL } from "../graphql/queries/userQuery";
 
 const FreindListScreen =({ navigation }) => {
   const [token,setToken] = useState('')
-  const {loading,error, data: friendData}= useQuery(GET_FRIENDLIST,{variables:{access_token:token}})
-  const {loading: loading2, error: error2, data: friendRequest}= useQuery(GET_FRIEND_REQUEST,{variables:{access_token:token}})
-  const [acceptFriend,{ loading: loading3, error: error3, data: acceptData }] = useMutation(ACCEPT_FRIEND)
+  const {loading,error, data: friendData, refetch: refetchFriend}= useQuery(GET_FRIENDLIST,{variables:{access_token:token}})
+  const {loading: loadingRequest, error: errorRequest, data: friendRequest,}= useQuery(GET_FRIEND_REQUEST,{variables:{access_token:token}})
+  const [acceptFriend,{ loading: loadingAccept, error: errorAccept, data: acceptData, }] = useMutation(ACCEPT_FRIEND)
+  const {loading: loadingGet, error: errorGet, data : userData} = useQuery(GET_ALL, {variables:{access_token:token}})
+  const [addFriend, {loading: loadingAdd, error: errorAdd, data : addData}] = useMutation(ADD_FRIEND)
+  const [search, setSearch ] = useState('')
+  const [name, setName] = useState('')
   // console.log(friendRequest,'req')
   // console.log(friendData,'list')
   // console.log(error3,'error3')
 
+  
   const getToken = async () =>{
     const access_token = await SecureStore.getItemAsync('access_token')
-    // console.log(access_token)
     setToken(access_token)
-    return access_token
   }
+
   useEffect(()=>{
     getToken()
   },[])
 
 
-  const accept= async (id) => {
-    // console.log(await getToken(),'token accept')
-    const acc_token = await getToken()
-    console.log(acc_token, id, '<<<');
-    
+  const accept= (id) => {
     acceptFriend({
       variables:{
-        access_token: acc_token, 
+        access_token: token, 
         FriendId: +id
       },
     })
-    console.log(id, acceptFriend ,'masuk pake eko')
-    // console.log(acceptData, 'broooo')
+    refetchFriend()
+  }
+
+  function handleOnPress(){
+    // console.log(name)
+    console.log(userData.allUsers,"ini userData")
+    userData.allUsers.filter(user =>{
+      if(user.username.toLowerCase() === name.toLowerCase()){
+        setSearch(user)
+      }
+    })
+    console.log(search, 'ini isi search')
+  }
+
+  const add = (id) =>{
+    console.log(token, 'ini acc broo');
+    
+    addFriend({
+      variables:{
+        access_token: token,
+        FriendId: +id
+      }
+    })
   }
 
   return (
@@ -55,7 +77,7 @@ const FreindListScreen =({ navigation }) => {
       <View style={styles.header}>
         <Text style={styles.title}>Friend Request</Text>
         <ScrollView>
-          {!loading2 && !error2 && friendRequest.getFriendRequest.map((list, id) =>{
+          {!loadingRequest && !errorRequest && friendRequest.getFriendRequest.map((list, id) =>{
                    return ( 
                    <View style={styles.action}>
             <FontAwesome name="user" color="#05375a" size={20} />
@@ -87,18 +109,20 @@ const FreindListScreen =({ navigation }) => {
       </View>
 
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.title}>Friend List</Text>
-
-        <ScrollView>
-
-        <View style={[styles.action,{marginBottom: 20}]}>
-            {/* <FontAwesome name="user" color="#05375a" size={20} /> */}
+        {
+          (name.length > 0 ?  <Text style={styles.title}>Add Friend</Text> :  <Text style={styles.title}>Friend List</Text>)
+        }
+          <ScrollView>
+          <View style={[styles.action,{marginBottom: 20}]}>
+            <FontAwesome name="user" color="#05375a" size={20} />
             <TextInput
+                keyboardType="default"
+                onChangeText={(name) => setName(name)}
                 placeholder="Add your's freind"
                 placeholderTextColor="#666666" 
                 style={[styles.textUser,{backgroundColor: '#fff'}]} />
             <TouchableOpacity
-              // onPress={() => navigation.navigate("WaitingRoom")}
+              onPress={handleOnPress}
             >
               <LinearGradient
                 colors={["#1F3C88", "#4f68ab"]}
@@ -108,8 +132,22 @@ const FreindListScreen =({ navigation }) => {
               </LinearGradient>
             </TouchableOpacity>
           </View>
-
-          {!loading && !error && friendData.getFriendlist.map((list,id)=>{
+        {
+          (name.length > 0 ?  <View style={styles.action}>
+            <FontAwesome name="user" color="#05375a" size={20} />
+            <Text style={styles.textUser}>{search.username}</Text>
+            <Text style={styles.textUser}>{search.id}</Text>
+            <TouchableOpacity
+              onPress={() => add(search.id)}
+            >
+              <LinearGradient
+                colors={["#EE6F57", "#ed5a3e"]}
+                style={styles.room}
+              >
+                <Text style={[styles.textRoom, { color: "#fff" }]}>Add</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View> :  (!loading && !error && friendData.getFriendlist.map((list,id)=>{
             return (<View style={styles.action} key={id}>
             <FontAwesome name="user" color="#05375a" size={20} />
             <Text style={styles.textUser}>{list.User.username}</Text>
@@ -124,7 +162,10 @@ const FreindListScreen =({ navigation }) => {
               </LinearGradient>
             </TouchableOpacity>
           </View>)
-          })}
+          })))
+        }
+       
+        
         </ScrollView>
       </Animatable.View>
     </View>

@@ -99,7 +99,6 @@ const Register = ({ navigation }) => {
 					'access_token',
 					registerData.userLogin.access_token
 				);
-
 				navigation.navigate('HomeTabNavigator');
 			} catch (error) {
 				console.log(error);

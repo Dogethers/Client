@@ -2,15 +2,10 @@ import { gql } from "@apollo/client";
 
 export const ADD_FRIEND = gql`
   mutation addFriend($access_token: String, $FriendId: Int) {
-    addFriend(acces_token: $acces_token, FriendId: $FriendId) {
+    addFriend(access_token: $access_token, FriendId: $FriendId) {
       FriendId
-      UserID
+      UserId
       status
-      User {
-        id
-        username
-        isOnline
-      }
     }
   }
 `;
@@ -43,7 +38,7 @@ export const REJECT_FRIEND = gql`
       FriendId: $FriendId
     ) {
       FriendId
-      UserID
+      UserId
       status
       User {
         id
